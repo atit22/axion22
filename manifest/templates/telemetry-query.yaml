@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-telemetry-query
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-telemetry-query
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-telemetry-query
+    spec:
+      containers:
+      - name: {{ .Release.Name}}-telemetry-query
+        image: acr222.azurecr.io/tele:v2
+
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DB_HOST
+          value: "{{ .Release.Name }}-postgres"
+
+        - name: DB_PORT
+          value: "5432"
+
+        - name: DB_NAME
+          value: "axion_db"
+        - name: DB_USER
+          value: "admin"  
+
+        - name: DB_PASSWORD
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Release.Name }}-postgres-secret
+             key: POSTGRES_PASSWORD
+
+
+  #      envFrom:
+  #      - configMapRef:
+     #      name: {{ .Release.Name }}-postgres-config
+
+    #    - secretRef:
+       #    name: {{ .Release.Name }}-postgres-secret
+
+ #       env:
+ #       - name: DATABASE_URL
+  #        value: "postgresql://admin:password123@postgres-service:5432/axion_db"

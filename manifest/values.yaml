@@ -1,0 +1,12 @@
+replicaCount:
+  ui: 1
+
+images:
+  axionUI:
+    repository: acr222.azurecr.io/axion-ui
+    tag: v2
+
+axionUI:
+  containerPort: 80
+
+  

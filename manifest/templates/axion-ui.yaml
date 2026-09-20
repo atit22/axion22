@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-ui
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-ui
+  replicas: {{ .Values.replicaCount.ui }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-ui
+ 
+    spec:
+      containers:
+      - name: {{ .Release.Name}}-ui
+        image: "{{ .Values.images.axionUI.repository }}:{{ .Values.images.axionUI.tag }}"
+
+        ports:
+        - containerPort: {{ .Values.axionUI.containerPort }}
+        resources:
+         requests:
+          cpu: "200m"
+          memory: "256Mi"
+         limits:
+          cpu: "220m"
+          memory: "280Mi" 
+        
+

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-pgadmin
+
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-pgadmin
+
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-pgadmin
+        azure.workload.identity/use: "true"
+
+    spec:
+      serviceAccountName: axion-sa
+
+      containers:
+      - name: {{ .Release.Name }}-pgadmin
+        image: dpage/pgadmin4:latest
+
+        ports:
+        - containerPort: 80
+
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: "admin@example.com"
+
+        - name: PGADMIN_DEFAULT_PASSWORD_FILE
+          value: "/mnt/secrets-store/pgadmin-password"
+
+        volumeMounts:
+        - name: secrets-store
+          mountPath: /mnt/secrets-store
+          readOnly: true
+
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: {{ .Release.Name }}-kv

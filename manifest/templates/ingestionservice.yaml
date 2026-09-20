@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-ingestion
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-ingestion
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-ingestion
+    spec:
+      containers:
+      - name: {{ .Release.Name}}-ingestion
+        image: acr222.azurecr.io/inge:v2
+
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DB_HOST
+          value: "{{ .Release.Name }}-postgres"
+
+        - name: DB_PORT
+          value: "5432"
+
+        - name: DB_NAME
+          value: "axion_db"
+          
+        - name: DB_USER
+          value: "admin"
+
+   #     envFrom:
+    #    - configMapRef:
+    #       name: {{ .Release.Name }}-postgres-config
+
+        - name: DB_PASSWORD
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Release.Name }}-postgres-secret
+             key: POSTGRES_PASSWORD
+
+
+
+
+  #      env:
+   #     - name: DATABASE_URL
+  #        value: "postgresql://admin:password123@postgres-service:5432/axion_db"    

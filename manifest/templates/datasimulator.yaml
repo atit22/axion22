@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-simulator
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name}}-simulator
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name}}-simulator
+    spec:
+      containers:
+      - name: {{ .Release.Name}}-simulator
+        image: acr222.azurecr.io/datasimulator:v1
+        
+        # acr22.azurecr.io/axion-simulator:v1
+        ports:
+        - containerPort: 8001
