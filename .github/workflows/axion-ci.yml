@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-and-push:
-   environment: azure-new
+   # environment: azure-new
    runs-on: ubuntu-latest
 
    steps:
