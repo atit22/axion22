@@ -20,10 +20,9 @@ jobs:
       - name: Azure Login
         uses: azure/login@v3
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
+          client-id: d58ad8cb-015b-4d02-ae02-f997b0139a08
+          tenant-id: 90dd04ee-72ca-46cd-8662-0d614e24d498
+          subscription-id: 933094f8-3653-44a5-b6f6-04a0992bcf41
           
       - name: Get AKS credentials
         run: |
