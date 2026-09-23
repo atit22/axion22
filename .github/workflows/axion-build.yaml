@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t $IMAGE_NAME:$IMAGE_TAG ./axion-data-simulator
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
           
 
       - name: Tag Docker Image for ACR
