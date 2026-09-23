@@ -1,1 +1,63 @@
+name: build and deploy
 
+on:
+ workflow_dispatch: 
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push:
+   # environment: azure-new
+   runs-on: ubuntu-latest
+   env:
+      IMAGE_NAME: datasimulator
+      IMAGE_TAG: ${{ github.run_number }}
+      ACR_NAME: acr222
+      ACR_LOGIN_SERVER: acr222.azurecr.io   
+   steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v3
+        with:
+          client-id: d58ad8cb-015b-4d02-ae02-f997b0139a08
+          tenant-id: 90dd04ee-72ca-46cd-8662-0d614e24d498
+          subscription-id: 933094f8-3653-44a5-b6f6-04a0992bcf41
+      - name: Log in to ACR
+        run: |
+          az acr login --name $ACR_NAME
+
+      - name: Build Docker Image
+        run: |
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+          
+
+      - name: Tag Docker Image for ACR
+        run: |
+          docker tag $IMAGE_NAME:$IMAGE_TAG $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+
+      - name: Push Docker Image to ACR
+        run: |
+          docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG          
+          
+      # - name: Get AKS credentials
+      #   run: |
+      #     az aks get-credentials \
+      #       --resource-group RG22 \
+      #       --name  KC100 \
+      #       --overwrite-existing
+
+      # - name: Check AKS
+      #   run: |
+      #     kubectl get nodes
+
+      # - name: Helm Upgrade
+      #   run: |
+      #     helm upgrade --install axion ./manifest \
+            --namespace axiom22 \
+            --create-namespace       
+  
