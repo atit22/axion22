@@ -57,6 +57,6 @@ jobs:
       # - name: Helm Upgrade
       #   run: |
       #     helm upgrade --install axion ./manifest \
-            --namespace axiom22 \
-            --create-namespace       
+            # --namespace axiom22 \
+            # --create-namespace       
   
