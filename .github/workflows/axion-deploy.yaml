@@ -2,12 +2,12 @@ name: deploy to aks
 
 on:
   workflow_run:
-    workflows: ["build and deploy"]
+    workflows:
+      - "build and deploy"
     types:
       - completed
 
 permissions:
-  id-token: write
   contents: write
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Update image tag in deployment
         run: |
