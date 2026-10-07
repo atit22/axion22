@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name}}-simulator
-        image: acr222.azurecr.io/datasimulator:20
+        image: acr222.azurecr.io/datasimulator:1
         
         # acr22.azurecr.io/axion-simulator:v1
         ports:
