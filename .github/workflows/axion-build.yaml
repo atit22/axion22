@@ -27,14 +27,7 @@ jobs:
           client-id: d58ad8cb-015b-4d02-ae02-f997b0139a08
           tenant-id: 90dd04ee-72ca-46cd-8662-0d614e24d498
           subscription-id: 933094f8-3653-44a5-b6f6-04a0992bcf41
-      - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: axion:${{ github.run_number }}
-          format: table
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'HIGH,CRITICAL'          
+     
       - name: Log in to ACR
         run: |
           az acr login --name $ACR_NAME
@@ -42,7 +35,14 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
-          
+      - name: Trivy Image Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: axion:${{ github.run_number }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'HIGH,CRITICAL'               
 
       - name: Tag Docker Image for ACR
         run: |
